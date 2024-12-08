@@ -18,21 +18,48 @@ def SpeakText(command):
     engine.runAndWait()
 
 
+def recognize_speech_from_mic(recognizer: sr.Recognizer, audio):
+    return recognizer.recognize_azure(
+        audio_data=audio,
+        key=key,
+        location="northeurope",
+        language="en-US",
+        profanity="raw",
+    )
+
+
 def callback(recognizer: sr.Recognizer, audio):
     try:
-        # Recognize speech using Google Web Speech API
-        text = recognizer.recognize_azure(
-            audio_data=audio,
-            key=key,
-            location="northeurope",
-            language="en-US",
-            profanity="raw",
-        )
+        # Recognize speech using Azure API
+        text = recognize_speech_from_mic(recognizer, audio)
         print(f"You said: {text[0]}")
 
-        llmText = ask_llm(text[0])
+        # Check if the user wants to initiate a conversation
+        if "hey buddy" in text[0].casefold():
+            # Initiate the chat
+            llm_generator = ask_llm(text[0])
+            next(llm_generator)  # Start the generator
 
-        SpeakText(llmText)
+            # Keep the chat open for continuous conversation
+            while True:
+                # Listen for the next user input
+                with sr.Microphone() as source:
+                    print("Listening for your next message...")
+                    audio = recognizer.listen(source)
+
+                # Recognize the next user input
+                next_text = recognize_speech_from_mic(recognizer, audio)
+                print(f"You said: {next_text[0]}")
+
+                # Check for termination command
+                if next_text[0].strip().lower() == "exit":
+                    SpeakText("Goodbye!")
+                    break
+
+                # Send the user message to the assistant and get the response
+                llmText = llm_generator.send(next_text[0])
+                SpeakText(llmText)
+
     except sr.UnknownValueError:
         print("Azure could not understand audio")
     except sr.RequestError as e:
