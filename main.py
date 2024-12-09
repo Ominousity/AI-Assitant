@@ -18,21 +18,27 @@ def SpeakText(command):
     engine.runAndWait()
 
 
+def recocnize_speech_from_mic(recognizer: sr.Recognizer, audio) -> str:
+    text = recognizer.recognize_azure(
+        audio_data=audio,
+        key=key,
+        location="northeurope",
+        language="en-US",
+        profanity="raw",
+    )
+    return text
+
+
 def callback(recognizer: sr.Recognizer, audio):
     try:
         # Recognize speech using Google Web Speech API
-        text = recognizer.recognize_azure(
-            audio_data=audio,
-            key=key,
-            location="northeurope",
-            language="en-US",
-            profanity="raw",
-        )
+        text = recocnize_speech_from_mic(recognizer, audio)
         print(f"You said: {text[0]}")
 
-        llmText = ask_llm(text[0])
+        if "buddy" in text.casefold():
+            llmText = ask_llm(text[0])
+            SpeakText(llmText)
 
-        SpeakText(llmText)
     except sr.UnknownValueError:
         print("Azure could not understand audio")
     except sr.RequestError as e:
