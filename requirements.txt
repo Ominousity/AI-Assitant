@@ -1,4 +1,4 @@
-autogen
+git+https://github.com/patrickstolc/autogen.git@0.2#egg=autogen-agentchat
 autogen-agentchat[mistral]~=0.2
 SpeechRecognition
 pyaudio

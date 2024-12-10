@@ -10,11 +10,10 @@ recognizer = sr.Recognizer()
 key = os.getenv("AzureAPI")
 
 
-def SpeakText(command):
-    # Initialize the engine
+def SpeakText(text: str):
     engine = pyttsx3.init()
     engine.setProperty("rate", 200)
-    engine.say(command)
+    engine.say(text)
     engine.runAndWait()
 
 
@@ -26,17 +25,16 @@ def recocnize_speech_from_mic(recognizer: sr.Recognizer, audio) -> str:
         language="en-US",
         profanity="raw",
     )
-    return text
+    return text[0]
 
 
 def callback(recognizer: sr.Recognizer, audio):
     try:
-        # Recognize speech using Google Web Speech API
         text = recocnize_speech_from_mic(recognizer, audio)
-        print(f"You said: {text[0]}")
+        print(f"You said: {text}")
 
         if "buddy" in text.casefold():
-            llmText = ask_llm(text[0])
+            llmText = ask_llm(text)
             SpeakText(llmText)
 
     except sr.UnknownValueError:
@@ -52,6 +50,5 @@ try:
     while True:
         time.sleep(0.1)
 except KeyboardInterrupt:
-    # Stop the background listener when the script is interrupted
     stop_listening(wait_for_stop=False)
     print("Background listener stopped")
