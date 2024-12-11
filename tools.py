@@ -15,7 +15,7 @@ def handle_cookies(driver: webdriver.Chrome):
         print("No cookie consent prompt found or handled.")
 
 
-def get_weather_data(today: bool, days: int, city: str = "Esbjerg") -> list:
+def get_weather_data(only_today: bool, days: int, city: str = "Esbjerg") -> list:
     if days > 7:
         return "No more than 7 days of forecast is allowed."
 
@@ -29,7 +29,7 @@ def get_weather_data(today: bool, days: int, city: str = "Esbjerg") -> list:
         EC.presence_of_element_located((By.CLASS_NAME, 'UQt4rd'))
     )
 
-    if today and days == 1:
+    if only_today:
         current_temp = driver.find_element(By.ID, 'wob_tm').text
         current_weather = driver.find_element(By.ID, 'wob_dc').text
         humidity = driver.find_element(By.ID, 'wob_hm').text
