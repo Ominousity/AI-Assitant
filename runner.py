@@ -1,3 +1,4 @@
+import argparse
 import speech_recognition as sr
 import pyttsx3
 import time
@@ -5,17 +6,18 @@ import os
 
 from llm import ask_llm
 
-
 recognizer = sr.Recognizer()
 key = os.getenv("AzureAPI")
 
+parser = argparse.ArgumentParser(description="Speech to text runner")
+parser.add_argument("--stt", action='store_true', help="Speech to text")
+args = parser.parse_args()
 
 def SpeakText(text: str):
     engine = pyttsx3.init()
     engine.setProperty("rate", 200)
     engine.say(text)
     engine.runAndWait()
-
 
 def recocnize_speech_from_mic(recognizer: sr.Recognizer, audio) -> str:
     text = recognizer.recognize_azure(
@@ -35,6 +37,7 @@ def callback(recognizer: sr.Recognizer, audio):
 
         if "buddy" in text.casefold():
             llmText = ask_llm(text)
+            print("Speaking...")
             SpeakText(llmText)
 
     except sr.UnknownValueError:
@@ -42,13 +45,23 @@ def callback(recognizer: sr.Recognizer, audio):
     except sr.RequestError as e:
         print(f"Could not request results from Azure; {e}")
 
+if args.stt:
+    # Create a background listener that listens for speech in the background
+    stop_listening = recognizer.listen_in_background(sr.Microphone(), callback)
 
-# Create a background listener that listens for speech in the background
-stop_listening = recognizer.listen_in_background(sr.Microphone(), callback)
-
-try:
+    try:
+        while True:
+            time.sleep(0.1)
+    except KeyboardInterrupt:
+        stop_listening(wait_for_stop=False)
+        print("Background listener stopped")
+else:
     while True:
-        time.sleep(0.1)
-except KeyboardInterrupt:
-    stop_listening(wait_for_stop=False)
-    print("Background listener stopped")
+        text = input("Enter a command: ")
+        if text == "exit":
+            break
+
+        llmText = ask_llm(text)
+        print("Speaking...")
+        SpeakText(llmText)
+        

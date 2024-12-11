@@ -3,3 +3,5 @@ autogen-agentchat[mistral]~=0.2
 SpeechRecognition
 pyaudio
 pyttsx3
+selenium
+argparse
