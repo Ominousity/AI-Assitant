@@ -57,14 +57,17 @@ def get_weather_data(only_today: bool, days: int, city: str = "Esbjerg") -> list
         return forecast
 
 
-def add_to_todoList(item: str) -> None:
+def add_to_todoList(items: list) -> str:
     with open("TODO.txt", "a") as myfile:
-        myfile.write(item)
+        for item in items:
+            myfile.write(item + "\n")
+    return "Items added to todo list."
 
 def get_todoList() -> str:
     with open("TODO.txt", "r") as myfile:
         return myfile.read()
 
-def clear_todoList() -> None:
+def clear_todoList() -> str:
     with open("TODO.txt", "w") as myfile:
         myfile.write("")
+    return "Todo list cleared."
