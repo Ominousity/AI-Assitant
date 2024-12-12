@@ -4,7 +4,7 @@
 This AI Assistant program leverages Mistral AI for natural language processing and Azure Speech Tools for speech recognition,. Additionally, it utilizes the pyttsx3 library for text-to-speech functionality.
 
 ## Requirements & Dependencies
-This program depends on python 3.11 and is required to be downloaded and working to run the program.\
+This program depends on python 3.11 and is required to be downloaded and working to run the program. It is also required to have Chrome installed on the machine.\
 To run the program you will also be required to fill out .env file for the program to work, this file and appropriate variables will be created by the run.bat file
 
 > [!NOTE]  

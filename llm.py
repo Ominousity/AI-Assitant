@@ -34,7 +34,7 @@ user = UserProxyAgent(
 )
 
 tool_functions = [
-    {"function": get_weather_data, "name": "get_weather_data", "description": "Get weather data for a city. the days argument can max be 7. Translate to english if needed."},
+    {"function": get_weather_data, "name": "get_weather_data", "description": "Get weather data for a city. The days argument can max be 7. Translate to english if needed."},
     {"function": add_to_todoList, "name": "add_to_todoList", "description": "Add an item to the todo list."},
     {"function": get_todoList, "name": "get_todoList", "description": "Get the todo list."},
     {"function": clear_todoList, "name": "clear_todoList", "description": "Clear the todo list."}
