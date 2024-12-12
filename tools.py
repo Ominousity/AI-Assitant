@@ -1,5 +1,4 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -38,7 +37,7 @@ def get_weather_data(only_today: bool, days: int, city: str = "Esbjerg") -> list
         
 
         driver.quit()
-        return f"Temperature: {current_temp}, Weather: {current_weather}°, Humidity: {humidity}, Wind: {wind} Downfall: {downfall}"
+        return f"Temperature: {current_temp}°, Weather: {current_weather}, Humidity: {humidity}, Wind: {wind} Downfall: {downfall}"
     else:
         forecast = []
         for i in range(days):
@@ -56,3 +55,16 @@ def get_weather_data(only_today: bool, days: int, city: str = "Esbjerg") -> list
         
         print(forecast)
         return forecast
+
+
+def add_to_todoList(item: str) -> None:
+    with open("TODO.txt", "a") as myfile:
+        myfile.write(item)
+
+def get_todoList() -> str:
+    with open("TODO.txt", "r") as myfile:
+        return myfile.read()
+
+def clear_todoList() -> None:
+    with open("TODO.txt", "w") as myfile:
+        myfile.write("")

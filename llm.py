@@ -1,6 +1,9 @@
 import os
 from autogen import ConversableAgent, UserProxyAgent, register_function
-from tools import get_weather_data
+from tools import get_weather_data, add_to_todoList, get_todoList, clear_todoList
+from dotenv import load_dotenv
+
+load_dotenv(".env")
 
 config_list = [
     {
@@ -26,11 +29,15 @@ assistant = ConversableAgent(
 user = UserProxyAgent(
     name="User",
     human_input_mode="NEVER",
-    max_consecutive_auto_reply=0
+    max_consecutive_auto_reply=0,
+    code_execution_config={"use_docker": False},
 )
 
 tool_functions = [
     {"function": get_weather_data, "name": "get_weather_data", "description": "Get weather data for a city. the days argument can max be 7. Translate to english if needed."},
+    {"function": add_to_todoList, "name": "add_to_todoList", "description": "Add an item to the todo list."},
+    {"function": get_todoList, "name": "get_todoList", "description": "Get the todo list."},
+    {"function": clear_todoList, "name": "clear_todoList", "description": "Clear the todo list."}
 ]
 
 for tool in tool_functions:

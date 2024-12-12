@@ -3,8 +3,11 @@ import speech_recognition as sr
 import pyttsx3
 import time
 import os
+from dotenv import load_dotenv
 
 from llm import ask_llm
+
+load_dotenv(".env")
 
 recognizer = sr.Recognizer()
 key = os.getenv("AzureAPI")
